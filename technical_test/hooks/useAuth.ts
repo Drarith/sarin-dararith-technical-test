@@ -4,8 +4,8 @@ import { getAccessToken } from "@/storage/authToken";
 type AuthStatus = "loading" | "loggedIn" | "loggedOut";
 
 /**
- * 
- * @returns 
+ * Reads the saved auth token on app start and exposes a simple auth status.
+ * Use this to decide whether to redirect the user or show the login screen.
  */
 export function useAuth() {
   const [status, setStatus] = useState<AuthStatus>("loading");
