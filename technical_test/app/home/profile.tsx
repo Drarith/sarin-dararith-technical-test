@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getJSON, type UserProfileResponse } from "@/http/http";
+import { getJSON } from "@/http/http";
 import { getAccessToken } from "@/storage/authToken";
 
 type Gender = "male" | "female";

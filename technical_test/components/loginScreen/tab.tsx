@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Alert, Keyboard, Pressable, Text, View } from "react-native";
+import {
+  Alert,
+  Keyboard,
+  Pressable,
+  Text,
+  View,
+  Animated,
+  useWindowDimensions,
+} from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +26,8 @@ import { setTokens } from "@/storage/authToken";
 export default function LoginScreenTab() {
   const [passwordHidden, setPasswordHidden] = useState(true);
   const router = useRouter();
+  const [slideAnim] = useState(new Animated.Value(0));
+  const { width } = useWindowDimensions();
 
   const {
     control,
@@ -26,7 +36,7 @@ export default function LoginScreenTab() {
     clearErrors,
     handleSubmit,
     trigger,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormLoginData>({
     resolver: zodResolver(loginSchema),
     // mode declared here
@@ -70,26 +80,46 @@ export default function LoginScreenTab() {
     Keyboard.dismiss();
     setPasswordHidden(true);
     clearErrors(["contact", "password"]);
-    // change mode value to active tab
+
+    Animated.timing(slideAnim, {
+      toValue: nextTab === "phone" ? 1 : 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+
     setValue("mode", nextTab);
     setValue("contact", "");
   };
 
   return (
     <View>
-      <View className="flex-row">
+      <View className="flex-row relative">
         <Pressable
           onPress={() => switchTab("email")}
-          className={`flex-1 items-center border-b-2 pb-3 ${tab === "email" ? "border-accent" : "border-textColor/10"}`}
+          className="flex-1 items-center border-b-2 border-textColor/10 pb-3"
         >
           <Text className="text-lg text-heading">Email</Text>
         </Pressable>
         <Pressable
           onPress={() => switchTab("phone")}
-          className={`flex-1 items-center border-b-2 pb-3 ${tab === "phone" ? "border-accent" : "border-textColor/10"}`}
+          className="flex-1 items-center border-b-2 border-textColor/10 pb-3"
         >
           <Text className="text-lg text-heading">Phone</Text>
         </Pressable>
+        <Animated.View
+          className="absolute bottom-0 h-0.5 bg-accent"
+          style={{
+            width: "50%",
+            transform: [
+              {
+                translateX: slideAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, width / 2],
+                }),
+              },
+            ],
+          }}
+        />
       </View>
 
       <View className="mx-1.5 mt-3.5 h-14 flex-row items-center rounded-lg border border-black/10 bg-black/5">
@@ -164,7 +194,7 @@ export default function LoginScreenTab() {
       <Pressable
         disabled={loginMutation.isPending}
         onPress={handleSubmit((data) => loginMutation.mutate(data))}
-        className={`mx-1.5 mt-7 h-14 items-center justify-center rounded-full  ${loginMutation.isPending ? "bg-gray-400" : "bg-accent"}`}
+        className={`mx-1.5 mt-7 h-14 items-center justify-center rounded-full  ${loginMutation.isPending ? "bg-gray-400" : "bg-accent"} `}
       >
         <Text className="text-lg font-medium">
           {loginMutation.isPending ? "Signing in..." : "Continue"}
