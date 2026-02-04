@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 const API_KEY = process.env.EXPO_PUBLIC_BASE_API_KEY;
 
-type ApiError = {
+export type ApiError = {
   title: string;
   code: string;
   message: string;

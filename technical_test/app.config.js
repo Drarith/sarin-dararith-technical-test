@@ -6,8 +6,5 @@ export default ({ config }) => ({
     API_URL: process.env.BASE_URL,
     API_KEY: process.env.BASE_API_KEY,
   },
+  plugins: ["expo-secure-store"],
 });
-
-// import Constants from "expo-constants";
-
-// const API_URL = Constants.expoConfig?.extra?.API_URL;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, Text, View, Keyboard } from "react-native";
+import { Alert, Keyboard, Pressable, Text, View } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +11,9 @@ import {
 } from "@/validation/validationSchema";
 import FormInput from "@/components/form/formInput";
 import { postJSON } from "@/http/http";
+import type { ApiError } from "@/http/http";
+import { setTokens } from "@/storage/authToken";
+import { set } from "zod";
 
 export default function LoginScreenTab() {
   const [passwordHidden, setPasswordHidden] = useState(true);
@@ -44,11 +47,18 @@ export default function LoginScreenTab() {
           : { countryCode: "855", phone: data.contact, password: data.password };
       return postJSON("/auth/login", payload);
     },
-    onSuccess: (result) => {
+    onSuccess: async (result) => {
+        const { accessToken, refreshToken } = result.data;
       console.log("Login response:", result);
+      console.log("Access Token:", accessToken);
+      console.log("Refresh Token:", refreshToken);
+      await setTokens(accessToken, refreshToken);
+      Alert.alert("Success", "Login successful");
     },
-    onError: (error) => {
+    onError: (error: ApiError) => {
       console.error("Login error:", error);
+      const message = error.title ? error.title + "\n" + error.message : "Login failed";
+      Alert.alert("Error", message);
     },
   });
 
