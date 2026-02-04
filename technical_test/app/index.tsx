@@ -3,7 +3,7 @@ import Login from "@/components/loginScreen/login";
 
 export default function HomeScreen() {
   return (
-    <View>
+    <View className="flex-1 bg-white">
       <Login />
     </View>
   );

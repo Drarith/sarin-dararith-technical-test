@@ -11,7 +11,8 @@ module.exports = {
       colors: {
         primary: "#ffffff",
         accent: "#38bdf8",
-        textColor: "#000",
+        textColor: "#000000",
+        mutedText: "#444a53",
       },
     },
   },
