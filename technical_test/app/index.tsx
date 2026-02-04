@@ -1,14 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View } from "react-native";
+import Login from "@/components/loginScreen/login";
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>test</Text>
+    <View>
+      <Login />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", justifyContent: "center" },
-  title: { fontSize: 28, fontWeight: "700" },
-});
+
