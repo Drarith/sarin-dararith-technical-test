@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
-import Login from "@/components/login";
+import { View } from "react-native";
+import Login from "@/components/loginScreen/login";
 
 export default function HomeScreen() {
   return (
