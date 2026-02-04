@@ -36,7 +36,7 @@ export default function LoginScreenTab() {
     clearErrors,
     handleSubmit,
     trigger,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormLoginData>({
     resolver: zodResolver(loginSchema),
     // mode declared here
