@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import {
   Pressable,
   Text,
-  TextInput,
   View,
   ActivityIndicator,
 } from "react-native";
@@ -61,25 +60,17 @@ export default function ProfilePage() {
       <Text className="mb-4 text-3xl font-medium text-heading">Profile</Text>
 
       <View className="mb-2 flex-row gap-2">
-        <TextInput
-          editable={false}
-          value={user?.firstName || ""}
-          className="h-12 flex-1 rounded-md border border-black/10 bg-black/5 px-3 text-base text-black"
-        />
-        <TextInput
-          editable={false}
-          value={user?.lastName || ""}
-          className="h-12 flex-1 rounded-md border border-black/10 bg-black/5 px-3 text-base text-black"
-        />
+        <View className="h-12 flex-1 justify-center rounded-md border border-black/10 bg-black/5 px-3">
+          <Text className="text-base text-black">{user?.firstName || ""}</Text>
+        </View>
+        <View className="h-12 flex-1 justify-center rounded-md border border-black/10 bg-black/5 px-3">
+          <Text className="text-base text-black">{user?.lastName || ""}</Text>
+        </View>
       </View>
 
       <View className="mb-3 h-12 flex-row items-center rounded-md border border-black/10 bg-black/5 px-3">
         <Feather name="mail" size={16} color="black" />
-        <TextInput
-          editable={false}
-          value={user?.email || ""}
-          className="ml-2 flex-1 text-base text-black"
-        />
+        <Text className="ml-2 flex-1 text-base text-black">{user?.email || ""}</Text>
       </View>
 
       <View className="flex-row items-center">
