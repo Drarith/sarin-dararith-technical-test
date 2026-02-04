@@ -41,7 +41,7 @@ export default function LoginScreenTab() {
       const payload =
         data.mode === "email"
           ? { email: data.contact, password: data.password }
-          : { phoneNumber: data.contact, password: data.password };
+          : { countryCode: "855", phone: data.contact, password: data.password };
       return postJSON("/auth/login", payload);
     },
     onSuccess: (result) => {
