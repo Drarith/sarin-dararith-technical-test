@@ -48,3 +48,42 @@ export async function postJSON<T>(path: string, body: T) {
     throw error;
   }
 }
+
+export async function getJSON(path: string, token: string) {
+  if (!BASE_URL) {
+    throw new Error("BASE_URL is missing");
+  }
+
+  if (!API_KEY) {
+    throw new Error("BASE_API_KEY is missing");
+  }
+
+  const url = `${BASE_URL}${path}`;
+  const headers: Record<string, string> = {
+    accept: "application/json",
+    apikey: API_KEY,
+    Authorization: `Bearer ${token}`,
+    "x-platform": Platform.OS === "ios" ? "ios" : "android",
+  };
+
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers,
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      const error: ApiError = {
+        title: errorData.title,
+        code: errorData.code,
+        message: errorData.message,
+      };
+      throw error;
+    }
+
+    return await res.json();
+  } catch (error) {
+    throw error;
+  }
+}
