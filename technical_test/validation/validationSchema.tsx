@@ -10,17 +10,20 @@ const phoneFieldSchema = z
 
 const passwordFieldSchema = z.string().min(6, "Password must be more than 6 characters");
 
-const emailSchema = z.object({
-  email: emailFieldSchema,
-  password: passwordFieldSchema,
-});
+const loginSchema = z.discriminatedUnion("mode", [
+  z.object({
+    mode: z.literal("email"),
+    contact: emailFieldSchema,
+    password: passwordFieldSchema,
+  }),
+  z.object({
+    mode: z.literal("phone"),
+    contact: phoneFieldSchema,
+    password: passwordFieldSchema,
+  }),
+]);
 
-const phoneSchema = z.object({
-  phoneNumber: phoneFieldSchema,
-  password: passwordFieldSchema,
-});
+export type FormLoginData = z.infer<typeof loginSchema>;
+export type LoginMode = FormLoginData["mode"];
 
-export type FormEmailData = z.infer<typeof emailSchema>;
-export type FormPhoneData = z.infer<typeof phoneSchema>;
-
-export { emailSchema, phoneSchema };
+export { loginSchema };
