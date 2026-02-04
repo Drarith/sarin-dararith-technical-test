@@ -1,17 +1,23 @@
 import { useState } from "react";
-import { Pressable, Text, View, Keyboard } from "react-native";
+import { Alert, Keyboard, Pressable, Text, View } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import {
   loginSchema,
   type FormLoginData,
   type LoginMode,
 } from "@/validation/validationSchema";
 import FormInput from "@/components/form/formInput";
+import { postJSON } from "@/http/http";
+import type { ApiError } from "@/http/http";
+import { setTokens } from "@/storage/authToken";
 
 export default function LoginScreenTab() {
   const [passwordHidden, setPasswordHidden] = useState(true);
+  const router = useRouter();
 
   const {
     control,
@@ -29,19 +35,33 @@ export default function LoginScreenTab() {
     reValidateMode: "onBlur",
     shouldUnregister: false,
   });
-// watch different mode defined in validationSchema
+  // watch different mode defined in validationSchema
   const tab = watch("mode");
   const isEmail = tab === "email";
   const contactPlaceholder = isEmail ? "Email" : "XXX XXX XXX XXX";
 
-  const onSubmit = (data: FormLoginData) => {
-    if (data.mode === "email") {
-      console.log("Email form data:", { email: data.contact, password: data.password });
-      return;
-    }
-
-    console.log("Phone form data:", { phoneNumber: data.contact, password: data.password });
-  };
+  const loginMutation = useMutation({
+    mutationFn: async (data: FormLoginData) => {
+      const payload =
+        data.mode === "email"
+          ? { email: data.contact, password: data.password }
+          : { countryCode: "855", phone: data.contact, password: data.password };
+      return postJSON("/auth/login", payload);
+    },
+    onSuccess: async (result) => {
+      const { accessToken, refreshToken } = result.data;
+      console.log("Login response:", result);
+      console.log("Access Token:", accessToken);
+      console.log("Refresh Token:", refreshToken);
+      await setTokens(accessToken, refreshToken);
+      router.replace("/home/home");
+    },
+    onError: (error: ApiError) => {
+      console.error("Login error:", error);
+      const message = error.title ? error.title + "\n" + error.message : "Login failed";
+      Alert.alert("Error", message);
+    },
+  });
 
   const switchTab = (nextTab: LoginMode) => {
     if (nextTab === tab) return;
@@ -95,7 +115,9 @@ export default function LoginScreenTab() {
         />
       </View>
       {errors.contact && (
-        <Text className="mx-1.5 mt-1 text-sm text-red-500">{errors.contact.message}</Text>
+        <Text className="mx-1.5 mt-1 text-sm text-red-500">
+          {errors.contact.message}
+        </Text>
       )}
 
       <View className="mx-1.5 mt-3.5 h-14 flex-row items-center rounded-lg border border-inputBorder bg-black/5">
@@ -126,7 +148,9 @@ export default function LoginScreenTab() {
         </Pressable>
       </View>
       {errors.password && (
-        <Text className="mx-1.5 mt-1 text-sm text-red-500">{errors.password.message}</Text>
+        <Text className="mx-1.5 mt-1 text-sm text-red-500">
+          {errors.password.message}
+        </Text>
       )}
 
       <Pressable>
@@ -136,13 +160,18 @@ export default function LoginScreenTab() {
       </Pressable>
 
       <Pressable
-        onPress={handleSubmit(onSubmit)}
-        className="mx-1.5 mt-7 h-14 items-center justify-center rounded-full bg-accent"
+        disabled={loginMutation.isPending}
+        onPress={handleSubmit((data) => loginMutation.mutate(data))}
+        className={`mx-1.5 mt-7 h-14 items-center justify-center rounded-full  ${loginMutation.isPending ? "bg-gray-400" : "bg-accent"}`}
       >
-        <Text className="text-lg font-medium">Continue</Text>
-        <View className="absolute right-6">
-          <Feather name="arrow-right" size={20} color="black" />
-        </View>
+        <Text className="text-lg font-medium">
+          {loginMutation.isPending ? "Signing in..." : "Continue"}
+        </Text>
+        {!loginMutation.isPending && (
+          <View className="absolute right-6">
+            <Feather name="arrow-right" size={20} color="black" />
+          </View>
+        )}
       </Pressable>
     </View>
   );
