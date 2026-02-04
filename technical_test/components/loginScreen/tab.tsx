@@ -12,7 +12,7 @@ import {
 } from "@/validation/validationSchema";
 import FormInput from "@/components/form/formInput";
 import { postJSON } from "@/http/http";
-import type { ApiError } from "@/http/http";
+import type { ApiError, LoginResponse } from "@/http/http";
 import { setTokens } from "@/storage/authToken";
 
 export default function LoginScreenTab() {
@@ -40,25 +40,27 @@ export default function LoginScreenTab() {
   const isEmail = tab === "email";
   const contactPlaceholder = isEmail ? "Email" : "XXX XXX XXX XXX";
 
-  const loginMutation = useMutation({
+  const loginMutation = useMutation<LoginResponse, ApiError, FormLoginData>({
     mutationFn: async (data: FormLoginData) => {
       const payload =
         data.mode === "email"
           ? { email: data.contact, password: data.password }
-          : { countryCode: "855", phone: data.contact, password: data.password };
+          : {
+              countryCode: "855",
+              phone: data.contact,
+              password: data.password,
+            };
       return postJSON("/auth/login", payload);
     },
     onSuccess: async (result) => {
       const { accessToken, refreshToken } = result.data;
-      console.log("Login response:", result);
-      console.log("Access Token:", accessToken);
-      console.log("Refresh Token:", refreshToken);
       await setTokens(accessToken, refreshToken);
       router.replace("/home/home");
     },
     onError: (error: ApiError) => {
-      console.error("Login error:", error);
-      const message = error.title ? error.title + "\n" + error.message : "Login failed";
+      const message = error.title
+        ? error.title + "\n" + error.message
+        : "Login failed";
       Alert.alert("Error", message);
     },
   });

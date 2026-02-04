@@ -4,6 +4,12 @@ const ACCESS_KEY = "auth.accessToken";
 const REFRESH_KEY = "auth.refreshToken";
 
 
+/**
+ * Stores authentication tokens securely using Expo SecureStore
+ * @param accessToken - JWT access token 
+ * @param refreshToken - JWT refresh token
+ * @throws {Error} When SecureStore write fails
+ */
 export async function setTokens(accessToken: string, refreshToken?: string) {
   try {
     await SecureStore.setItemAsync(ACCESS_KEY, accessToken);
