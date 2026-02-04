@@ -80,9 +80,9 @@ export default function ProfilePage() {
           className="mr-3 flex-row items-center"
           onPress={() => setGender("male")}
         >
-          <View className="mr-1 h-4 w-4 items-center justify-center rounded-full border border-black/40">
+          <View className={`mr-1 h-4 w-4 items-center justify-center rounded-full border ${ (user?.gender?.toLowerCase() || gender) === "male" ? "border-accent" : "border-black/40"}`}>
             {(user?.gender?.toLowerCase() || gender) === "male" && (
-              <View className="h-2 w-2 rounded-full bg-accent" />
+              <View className="h-2 w-2 rounded-full bg-accent " />
             )}
           </View>
           <Text className="text-sm text-black">Male</Text>
@@ -92,7 +92,7 @@ export default function ProfilePage() {
           className="flex-row items-center"
           onPress={() => setGender("female")}
         >
-          <View className="mr-1 h-4 w-4 items-center justify-center rounded-full border border-black/40">
+          <View className={`mr-1 h-4 w-4 items-center justify-center rounded-full border ${ (user?.gender?.toLowerCase() || gender) === "female" ? "border-accent" : "border-black/40"}`}>
             {(user?.gender?.toLowerCase() || gender) === "female" && (
               <View className="h-2 w-2 rounded-full bg-accent" />
             )}
