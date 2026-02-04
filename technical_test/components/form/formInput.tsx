@@ -12,6 +12,7 @@ type FormInputProps<T extends FieldValues> = {
   name: Path<T>;
   trigger?: UseFormTrigger<T>;
   inputClassName?: string;
+  // Omit to avoid duplication
 } & Omit<TextInputProps, "value" | "onChangeText" | "onBlur">;
 
 /**
@@ -43,7 +44,7 @@ export default function FormInput<T extends FieldValues>({
           void trigger(name);
         }
       }}
-      value={(field.value ?? "") as string}
+      value={(field.value ?? "")}
       className={inputClassName}
     />
   );

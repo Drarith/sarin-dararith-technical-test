@@ -76,7 +76,7 @@ export default function LoginScreenTab() {
             <Feather name="mail" size={18} color="black" />
           </View>
         ) : (
-          <View className="h-full w-20 items-center justify-center border-r border-inputBorder">
+          <View className="h-full w-20 items-center justify-center border-r">
             <Text className="text-base leading-5 text-textColor">🇰🇭 +855</Text>
           </View>
         )}
@@ -139,7 +139,7 @@ export default function LoginScreenTab() {
         onPress={handleSubmit(onSubmit)}
         className="mx-1.5 mt-7 h-14 items-center justify-center rounded-full bg-accent"
       >
-        <Text className="text-lg font-medium text-buttonText">Continue</Text>
+        <Text className="text-lg font-medium">Continue</Text>
         <View className="absolute right-6">
           <Feather name="arrow-right" size={20} color="black" />
         </View>
