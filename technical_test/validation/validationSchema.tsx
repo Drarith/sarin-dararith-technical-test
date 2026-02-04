@@ -10,6 +10,10 @@ const phoneFieldSchema = z
 
 const passwordFieldSchema = z.string().min(6, "Password must be more than 6 characters");
 
+/**
+ * Login form validation using Zod discriminated unions.
+ * Validates either email+password or phone+password based on the "mode"
+ */
 const loginSchema = z.discriminatedUnion("mode", [
   z.object({
     mode: z.literal("email"),

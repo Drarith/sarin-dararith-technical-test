@@ -1,48 +1,42 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Pressable, Text, TextInput, View, ActivityIndicator } from "react-native";
+import {
+  Pressable,
+  Text,
+  TextInput,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getJSON } from "@/http/http";
+import { getJSON, type UserProfileResponse } from "@/http/http";
 import { getAccessToken } from "@/storage/authToken";
 
 type Gender = "male" | "female";
-
-type UserData = {
-  avatar: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  gender: "Male" | "Female";
-  countryCode: string;
-  phone: string;
-};
-
-type UserProfileResponse = {
-  data: UserData;
-  message: string;
-  title: string;
-};
 
 export default function ProfilePage() {
   const router = useRouter();
   const [gender, setGender] = useState<Gender>("male");
 
-  const { data: user, isLoading, error } = useQuery<UserData>({
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["user", "me"],
     queryFn: async () => {
       const token = await getAccessToken();
       if (!token) {
         throw new Error("No auth token found");
       }
-      const response = (await getJSON("/users/me", token)) as UserProfileResponse;
+      const response = await getJSON("/users/me", token);
       return response.data;
     },
   });
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
+      <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" color="#38bdf8" />
       </View>
     );
@@ -50,7 +44,7 @@ export default function ProfilePage() {
 
   if (error) {
     return (
-      <View className="flex-1 items-center justify-center bg-white px-3">
+      <View className="flex-1 items-center justify-center px-3">
         <Text className="text-center text-red-500">
           {error instanceof Error ? error.message : "Failed to load profile"}
         </Text>
@@ -103,7 +97,10 @@ export default function ProfilePage() {
           <Text className="text-sm text-black">Male</Text>
         </Pressable>
 
-        <Pressable className="flex-row items-center" onPress={() => setGender("female")}>
+        <Pressable
+          className="flex-row items-center"
+          onPress={() => setGender("female")}
+        >
           <View className="mr-1 h-4 w-4 items-center justify-center rounded-full border border-black/40">
             {(user?.gender?.toLowerCase() || gender) === "female" && (
               <View className="h-2 w-2 rounded-full bg-accent" />
