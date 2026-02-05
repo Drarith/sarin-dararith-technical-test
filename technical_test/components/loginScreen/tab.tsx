@@ -98,13 +98,13 @@ export default function LoginScreenTab() {
           onPress={() => switchTab("email")}
           className="flex-1 items-center border-b-2 border-textColor/10 pb-3"
         >
-          <Text className="text-lg text-heading">Email</Text>
+          <Text className="text-lg text-textColor">Email</Text>
         </Pressable>
         <Pressable
           onPress={() => switchTab("phone")}
           className="flex-1 items-center border-b-2 border-textColor/10 pb-3"
         >
-          <Text className="text-lg text-heading">Phone</Text>
+          <Text className="text-lg text-textColor">Phone</Text>
         </Pressable>
         <Animated.View
           className="absolute bottom-0 h-0.5 bg-accent"
@@ -143,7 +143,7 @@ export default function LoginScreenTab() {
           autoCapitalize="none"
           autoCorrect={false}
           textAlignVertical="center"
-          inputClassName={`h-full flex-1 pr-3 text-base leading-5 text-inputText ${isEmail ? "" : "pl-2.5"}`}
+          inputClassName={`h-full flex-1 pr-3 text-base leading-5 text-textColor ${isEmail ? "" : "pl-2.5"}`}
         />
       </View>
       {errors.contact && (
@@ -162,9 +162,10 @@ export default function LoginScreenTab() {
           name="password"
           trigger={trigger}
           placeholder="Password"
+          placeholderTextColor="grey"
           secureTextEntry={passwordHidden}
           textAlignVertical="center"
-          inputClassName="h-full flex-1 pr-3 text-base leading-5 text-inputText"
+          inputClassName="h-full flex-1 pr-3 text-base leading-5 text-textColor"
         />
 
         <Pressable
