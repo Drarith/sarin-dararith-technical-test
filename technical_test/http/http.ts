@@ -80,7 +80,17 @@ export async function getJSON(path: string, token: string) {
 
     return data;
   } catch (error) {
-    throw error;
+    // If error has a code property, it's an API error we already formatted
+    if ((error as ApiError).code) {
+      throw error;
+    }
+    // Otherwise it's a network error
+    const networkError: ApiError = {
+      title: "Network Error",
+      code: "NETWORK_ERROR",
+      message: "Please check your internet connection and try again",
+    };
+    throw networkError;
   }
 }
 
@@ -127,6 +137,16 @@ export async function postJSON<T>(path: string, body: T) {
     const data: LoginResponse = await res.json();
     return data;
   } catch (error) {
-    throw error;
+    // If error has a code property, it's an API error we already formatted
+    if ((error as ApiError).code) {
+      throw error;
+    }
+    // Otherwise it's a network error
+    const networkError: ApiError = {
+      title: "Network Error",
+      code: "NETWORK_ERROR",
+      message: "Please check your internet connection and try again",
+    };
+    throw networkError;
   }
 }
