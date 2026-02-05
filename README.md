@@ -28,6 +28,9 @@ This is a react native app built with Expo and Expo Router. It includes a login 
 - Custom [`FormInput`](components/form/formInput.tsx) component bridges React Hook Form with React Native TextInput
 - Real-time validation on blur with error messages displayed inline
 
+### CI
+- CI will run lint on main push or merge
+
 ### Styling & Navigation
 - NativeWind 
 - Expo Router enables file-based routing with typed navigation
@@ -88,8 +91,8 @@ technical_test
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/Drarith/sarin-dararith-technical-test.git](https://github.com/Drarith/sarin-dararith-technical-test.git)
-    cd technical_test
+    git clone https://github.com/Drarith/sarin-dararith-technical-test.git
+    cd sarin-dararith-technical-test/technical_test/
     ```
 
 2.  **Install dependencies:**
